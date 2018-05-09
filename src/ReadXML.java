@@ -9,10 +9,15 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
+import com.google.common.collect.Table;
+import com.google.common.collect.HashBasedTable;
 
 public class ReadXML {
 	public void ReadXMLinTable()
 	{
+		
+		
+		
 		try {
 			
 			File XmlFile = new File("./xml/Assignment_EQ_reduced.xml");
