@@ -13,14 +13,13 @@ import com.google.common.collect.Table;
 import com.google.common.collect.HashBasedTable;
 
 public class ReadXML {
-	public void ReadXMLinTable()
+	public Table ReadXMLinTable(File XmlFile, Table<String, String, String> grid)
 	{
 		
-		
-		
+				
 		try {
 			
-			File XmlFile = new File("./xml/Assignment_EQ_reduced.xml");
+			
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(XmlFile);
@@ -35,37 +34,62 @@ public class ReadXML {
 			for (int i = 0; i < xmlNodeList.getLength(); i++) {  
 				Element element = (Element) xmlNodeList.item(i);
 				
-				//check if element has rdf:ID
+				//check if element has 
+				String row = "";
+				String column = "";
 				if(Objects.equals(element.getAttribute("rdf:ID"), "") == false)
 				{
-					System.out.println("------------------------");
-					System.out.println(element.getTagName());
-					System.out.println(element.getAttribute("rdf:ID"));
+					row = element.getAttribute("rdf:ID");
+				}
+				else if(Objects.equals(element.getAttribute("rdf:about"), "") == false)
+				{
+					row = element.getAttribute("rdf:about").substring(1);
+				}
+				
+				if(row != "")
+				{
+					column = "TagName";
+					grid.put(row, column, element.getTagName());
 					
+//					System.out.println("------------------------");
+//					System.out.println(element.getTagName());
+//					System.out.println(element.getAttribute("rdf:ID"));
+//					
+//									
 					NodeList NodesOfTagList =  element.getElementsByTagName("*");
 					for (int j= 0; j < NodesOfTagList.getLength(); j++) { // … use extractNode method 
 						Element ElementOfElement = (Element) NodesOfTagList.item(j);
 						
 						if(ElementOfElement.getAttributes().getLength() == 0)
 						{
-							System.out.println(ElementOfElement.getTagName());
-							System.out.println(ElementOfElement.getTextContent());
+							column = ElementOfElement.getTagName();
+							grid.put(row, column, ElementOfElement.getTextContent());
+//							System.out.println(ElementOfElement.getTagName());
+//							System.out.println(ElementOfElement.getTextContent());
 						}
 						else
 						{
 							Node attr = ElementOfElement.getAttributes().item(0);
-							System.out.println(ElementOfElement.getTagName() + "_" + attr.getNodeName());
-							System.out.println(attr.getNodeValue().substring(1));
+							column = ElementOfElement.getTagName() + "_" + attr.getNodeName();
+							grid.put(row, column, attr.getNodeValue().substring(1));
+//							System.out.println(ElementOfElement.getTagName() + "_" + attr.getNodeName());
+//							System.out.println(attr.getNodeValue().substring(1));
 						}
 						
-						System.out.println("");
+//						System.out.println("");
 					}
-					
 				}
-			   }
+			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+		
+//		System.out.println(grid.toString());
+//		String testrdf = grid.get("_b58bf21a-096a-4dae-9a01-3f03b60c24c7", "cim:Equipment.EquipmentContainer_rdf:resource");
+//		System.out.println(grid.row(testrdf).toString());
+//		System.out.println(grid.get("_b58bf21a-096a-4dae-9a01-3f03b60c24c7", "cim:Equipment.EquipmentContainer_rdf:resource"));
+		//System.out.println(grid.column("TagName").toString());
+		return grid;
 	}
 }
