@@ -67,7 +67,11 @@ public class CalcYMatrix {
 	{
 	
 		System.out.println("Analyzing current " + grid.get(current, "cim:IdentifiedObject.name"));
-		 // check if current element is a stop
+		
+		String TagNamecurrent = grid.get(current, "TagName");
+		Set<String> possibleNexts = new HashSet<String>();
+		
+		// check if current element is a stop
 		 if(busbartonode.containsKey(current))
 		 {
 			 // current node is a busbar
@@ -80,11 +84,49 @@ public class CalcYMatrix {
 			 System.out.println("current is a connectivity busbar node: " + grid.get(current, "cim:IdentifiedObject.name"));
 			 return;
 		 }
+		 switch(TagNamecurrent)
+		 {
+		 	// check if current element is a stop
+		 	case "cim:EnergyConsumer":
+		 		System.out.println("current is a cim:EnergyConsumer: " + grid.get(current, "cim:IdentifiedObject.name"));
+				 return;
+		 	
+		 	case "cim:GeneratingUnit":
+		 		System.out.println("current is a cim:GeneratingUnit: " + grid.get(current, "cim:IdentifiedObject.name"));
+				 return;
+		 	
+		 	case "cim:LinearShuntCompensator":
+		 		System.out.println("current is a cim:LinearShuntCompensator: " + grid.get(current, "cim:IdentifiedObject.name"));
+				 return;
+				 
+		 	case "cim:Breaker":
+		 		if(Objects.equals(grid.get(current, "cim:Switch.open"),"true"))
+		 		{
+		 			System.out.println("current is a cim:Breaker and open: " + grid.get(current, "cim:IdentifiedObject.name"));
+					 return;
+		 		}
+		 }
 		 // TODO: add other stop applicable
 		 
 		 // find out next element and store information of current element
-		 Set<String> possibleNexts = new HashSet<String>();
-		 String TagNamecurrent = grid.get(current, "TagName");
+		 
+		 
+		 
+		 // Extract necessary information
+		 switch(TagNamecurrent)
+		 {
+		 	case "cim:ACLineSegment":
+		 		
+		 		System.out.println("current is a cim:ACLineSegment. Extracting info");
+		 	break;
+		 	case "cim:PowerTransformer":
+		 		
+		 		System.out.println("current is a cim:PowerTransformer. Extracting info");
+		 	break;
+		 	
+		 }
+		 
+		 //Find possible Nexts:
 		 switch(TagNamecurrent)
 		 {
 		 	case "cim:Terminal":
@@ -96,9 +138,11 @@ public class CalcYMatrix {
 		 		possibleNexts = getKeysByValue(grid.column("cim:Terminal.ConnectivityNode_rdf:resource"), current);
 		 		System.out.println("current is a ConnectivityNode. Found nexts");
 		 	break;
-		 	default:
-		 		System.out.println("current is a unkown node. Stopping");
-		 		return;		 		
+		 	default: // element
+		 		possibleNexts = getKeysByValue(grid.column("cim:Terminal.ConductingEquipment_rdf:resource"), current);
+		 		System.out.println("current is a Element. Found nexts");
+		 	break;
+		 		
 		 
 		 }
 		 
@@ -115,22 +159,6 @@ public class CalcYMatrix {
 		 return;
 	}
 	
-	
-	
-//	public static int multiply_recursive(int multi1, int mulit2) 
-//	{
-//		System.out.println("Call of function, multi2 = " + mulit2);
-//		if(mulit2 == 0 )
-//		{
-//			
-//			return 0;
-//		}
-//		else
-//		{
-//			
-//			return multiply_recursive(multi1, mulit2-1)+multi1; 
-//		}
-//	}
 	
 	
 	// helper function to obtain keys from a value
