@@ -48,7 +48,7 @@ public class CalcYMatrix {
 			Set<String> terminals = getKeysByValue(grid.column("cim:Terminal.ConnectivityNode_rdf:resource"), busbarconnectivitynode);
 			for(String terminal : terminals)
 			{
-				System.out.println("*********Starting from Terminal at origin");
+				System.out.println("*********Starting from Terminal at origin " + grid.get(terminal, "cim:IdentifiedObject.name"));
 				analyseNextElement(terminal, busbarconnectivitynode, grid, BusBartoNode);
 //				System.out.println("Node: busbarconnectivitynode " + busbarconnectivitynode + " has Terminal " + terminal);				
 			}
@@ -65,18 +65,19 @@ public class CalcYMatrix {
 	
 	public static void analyseNextElement(String current, String previous, Table<String, String, String> grid, BiMap<String, String> busbartonode)
 	{
-		System.out.println("Analyzing current");
+	
+		System.out.println("Analyzing current " + grid.get(current, "cim:IdentifiedObject.name"));
 		 // check if current element is a stop
 		 if(busbartonode.containsKey(current))
 		 {
 			 // current node is a busbar
-			 System.out.println("current is a busbar: " + current);
+			 System.out.println("current is a busbar: " + grid.get(current, "cim:IdentifiedObject.name"));
 			 return;
 		 }
-		 else if(busbartonode.containsValue(current))
+		 if(busbartonode.containsValue(current))
 		 {
 			// current node is a connectivity busbar node
-			 System.out.println("current is a connectivity busbar node: " + current);
+			 System.out.println("current is a connectivity busbar node: " + grid.get(current, "cim:IdentifiedObject.name"));
 			 return;
 		 }
 		 // TODO: add other stop applicable
@@ -89,11 +90,11 @@ public class CalcYMatrix {
 		 	case "cim:Terminal":
 		 		possibleNexts.add(grid.get(current, "cim:Terminal.ConductingEquipment_rdf:resource"));
 		 		possibleNexts.add(grid.get(current, "cim:Terminal.ConnectivityNode_rdf:resource"));
-		 		System.out.println("current is a Terminal. Found nexts ");
+		 		System.out.println("current is a Terminal. Found nexts");
 		 	break;
 		 	case "cim:ConnectivityNode":
 		 		possibleNexts = getKeysByValue(grid.column("cim:Terminal.ConnectivityNode_rdf:resource"), current);
-		 		System.out.println("current is a ConnectivityNode. Found nexts ");
+		 		System.out.println("current is a ConnectivityNode. Found nexts");
 		 	break;
 		 	default:
 		 		System.out.println("current is a unkown node. Stopping");
@@ -104,8 +105,10 @@ public class CalcYMatrix {
 		 // only analyze not previous connected
 		 for(String possibleNext : possibleNexts)
 		 {
-			 if(possibleNext != previous)
+//			 System.out.println("Checking if " +  possibleNext + " with " + previous);
+			 if(!(Objects.equals(possibleNext, previous)))
 			 {
+				 System.out.println("Calling possibl next: " + grid.get(possibleNext, "cim:IdentifiedObject.name"));
 				 analyseNextElement(possibleNext, current, grid, busbartonode);
 			 }
 		 }
