@@ -24,6 +24,9 @@ public class run {
 		File EQ_File = new File("./xml/Assignment_EQ_reduced.xml");
 		File SSH_File = new File("./xml/Assignment_SSH_reduced.xml");
 		
+//		File EQ_File = new File("./xml/MicroGridTestConfiguration_T1_BE_EQ_V2.xml");
+//		File SSH_File = new File("./xml/MicroGridTestConfiguration_T1_BE_SSH_V2.xml");
+		
 		ReadXML readxml = new ReadXML();
 		grid = readxml.ReadXMLinTable(EQ_File,grid);
 		grid = readxml.ReadXMLinTable(SSH_File, grid);
