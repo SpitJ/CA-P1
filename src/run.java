@@ -1,16 +1,5 @@
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
 
-
-
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.TreeBasedTable;
 import com.google.common.collect.Table;
 
@@ -18,7 +7,8 @@ import com.google.common.collect.Table;
 public class run {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
+		//Table with all containing information
 		Table<String, String, String> grid = TreeBasedTable.create();
 		
 		File EQ_File = new File("./xml/Assignment_EQ_reduced.xml");
@@ -27,40 +17,16 @@ public class run {
 //		File EQ_File = new File("./xml/MicroGridTestConfiguration_T1_BE_EQ_V2.xml");
 //		File SSH_File = new File("./xml/MicroGridTestConfiguration_T1_BE_SSH_V2.xml");
 		
+		// read XML grid info into grid table
 		ReadXML readxml = new ReadXML();
 		grid = readxml.ReadXMLinTable(EQ_File,grid);
 		grid = readxml.ReadXMLinTable(SSH_File, grid);
 		
+		// calculate Y matrix with the grid table information
 		CalcYMatrix calcYmatrix = new CalcYMatrix();
-		calcYmatrix.CalcYMatrixFromGrid(grid);
-		//System.out.println(grid.toString());
+		Table<String, String, String> YMatrix = calcYmatrix.CalcYMatrixFromGrid(grid);
 		
-		
-//		Table<String, String, String> testTable = TreeBasedTable.create();
-//		Map<String, String> testMap = new HashMap<String, String>();
-//		testMap.put("TagName", "geraet1");
-//		testMap.put("Wert", "10");
-//		testTable.row("1").putAll(testMap);
-//		System.out.println(testTable.row("1"));
-//		for (int i= 0; i < grid.column("TagName").size(); j++)
-//		{
-//			grid.column
-//		}
-		
-		
-		
-//		System.out.println(grid.column()
-	//	System.out.println(getKeysByValue(grid.column("TagName"), "cim:BusbarSection"));
-		
-//		Table<String, String, String> grid = HashBasedTable.create();
-//		
-//		grid.put("Peter", "Lohn","12");
-//		grid.put("Hans", "Lohn","13");
-//		grid.put("Fred", "Monatslohn","1500");
-//		System.out.println( grid.column("Lohn").toString());
-	
-
+		System.out.println("Final Y Matrix:");
+		System.out.println(YMatrix.toString());
 	}
-
-
 }
