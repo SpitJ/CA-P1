@@ -1,5 +1,13 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.TreeBasedTable;
 import com.google.common.collect.Table;
 
@@ -28,5 +36,12 @@ public class run {
 		
 		System.out.println("Final Y Matrix:");
 		System.out.println(YMatrix.toString());
+		
+		// Write determined matrices as a csv
+		TableToCSV tabletocsv = new TableToCSV();
+		tabletocsv.write(grid, "./csv/grid.csv");
+		tabletocsv.write(YMatrix, "./csv/YMatrix.csv");
 	}
+	
+
 }

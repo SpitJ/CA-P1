@@ -1,5 +1,4 @@
 import java.util.HashMap;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -58,6 +57,8 @@ public class CalcYMatrix {
 //				System.out.println("Node: busbarconnectivitynode " + busbarconnectivitynode + " has Terminal " + terminal);				
 			}
 		}
+		TableToCSV tabletocsv = new TableToCSV();
+		tabletocsv.write(ImpedanceMatrix, "./csv/ImpedanceMatrix.csv");
 		
 		//Convert Impedance Table to Y Matrix
 		Table<String, String, String> YMatrix = TreeBasedTable.create();
